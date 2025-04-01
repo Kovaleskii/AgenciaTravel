@@ -219,7 +219,7 @@ body.dark tbody tr:hover {
                                     <tr> 
                                         <td>${row.id} </td>
                                         <td>${row.destino} </td>
-                                        <td>${row.data_viagem} </td>
+                                        <td>${row.data_viagem.toLocaleDateString('pt-BR')} </td>
                                         <td>${row.preco} </td>
                                         <td>${row.vagas} </td>
                                     </tr>
