@@ -38,9 +38,10 @@ const connection = mysql.createConnection({
     port: 3306
 });
 ```
-4- Crie uma pasta chamada public, para poder conectar o css
-Crie uma nova pasta chama public dentro da pasta Agencia_viagens,
-ou altere no HTML. href /style.css esta dentro da pasta public.
+## 4- Crie uma pasta chamada public, para poder conectar o css.
+
+- Crie uma nova pasta chama public dentro da pasta Agencia_viagens.
+- Ou altere no HTML. href /style.css que esta dentro da pasta public.
 ```<link rel="stylesheet" href="/style.css">```
 
 ## ▶️ Como Executar o Projeto
