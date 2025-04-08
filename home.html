@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agência de Viagens</title>
+    <link rel="stylesheet" href="/style.css">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <body>
+        <h1>Gerenciamento de Viagens</h1>
+ 
+        <!-- Formulário para cadastrar viagens -->
+        <form action="/cadastrar" method="post">
+            <input type="text" name="destino" id="destino" placeholder="Destino" required>
+            <input type="date" name="data_viagem"  id="data_viagem" required>
+            <input type="number" name="preco" id="preco" placeholder="Preço (R$)" required>
+            <input type="number" name="vagas"  id="vagas" placeholder="Vagas" required>
+            
+            <button type="submit">Cadastrar Viagem</button>
+           
+            <a href="/listar">
+            <button type="button" class="btn" value="Listar Viagens"> Listar Viagens </button>
+        </a>
+
+        </form>
+        </table>
+     </body>
+    </html>
