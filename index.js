@@ -80,15 +80,6 @@ h1 {
   color: #006064;
   animation: fadeIn 1s ease;
 }
-
-/* Toggle Dark Mode */
-.toggle-mode {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 999;
-}
-
 .toggle-mode i {
   font-size: 1.8rem;
   cursor: pointer;
@@ -153,35 +144,7 @@ td {
 .action-btn:hover {
   background: #007c91;
 }
-
-/* Dark Mode */
-body.dark {
-  background: #121212;
-  color: #f1f1f1;
-}
-
-body.dark h1 {
-  color: #00e5ff;
-}
-
-body.dark .toggle-mode i {
-  color: #00e5ff;
-}
-
-body.dark .table-container {
-  background: rgba(30, 30, 30, 0.7);
-  color: #fff;
-  border: 1px solid #333;
-}
-
-body.dark thead {
-  background: #0097a7;
-}
-
-body.dark tbody tr:hover {
-  background: #333;
-}
-
+                  
 /* Animações */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
@@ -222,6 +185,10 @@ body.dark tbody tr:hover {
                                         <td>${row.data_viagem} </td>
                                         <td>${row.preco} </td>
                                         <td>${row.vagas} </td>
+                                        <td>
+                                <a href="/excluir/${row.id}">Remover</a>
+                                <a href="/editar/${row.id}">editar</a>
+                                </td>
                                     </tr>
                                     `).join('')}
                             </table>
@@ -262,6 +229,234 @@ body.dark tbody tr:hover {
         }
     })
     });
+
+  
+
+//rota para acessar a página de remover a viagem
+
+app.get('/excluir/:id', function(req, res){
+  const id = req.params.id; // pega o id da viagem excluido
+
+  //excluir o produto com o id correot
+  connection.query('delete from viagens where id = ?', [id], function(err, result){
+    if(err){
+      console.log("Erro ao excluir viagem ", err);
+      res.send(500).send('Erro ao excluir viagem. ');
+      return;
+    }
+    console.log("Viagem excluida com sucesso! ");
+    res.redirect('/listar'); // redireciona para a página de listar viagens
+  })
+
+});
+
+// editar o banco de dados
+app.get('/editar/:id', function(req, res){
+  const id = req.params.id; // pega o id da viagem excluido
+  const select = 'SELECT * FROM viagens WHERE id = ?';
+
+  connection.query(select, [id], function(err, rows){
+    if(!err){
+      console.log("Produto encontrado com sucesso!");
+      res.send(`
+          <html>
+              <head>
+                  <title> Editar produto </title>
+              </head>
+              <style> * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #e0f7fa, #fff);
+  transition: 0.4s ease;
+  padding: 2rem;
+  color: #333;
+}
+
+/* Título */
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #006064;
+  animation: fadeIn 1s ease;
+}
+
+/* Toggle Dark Mode */
+.toggle-mode {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 999;
+}
+
+.toggle-mode i {
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #006064;
+}
+
+/* Container do Formulário */
+.form-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  animation: fadeInUp 1s ease;
+}
+
+/* Estilos do Formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #006064;
+}
+
+input,
+textarea,
+select {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #00acc1;
+  outline: none;
+}
+
+/* Botão de Enviar */
+.submit-btn {
+  background: #00acc1;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+  align-self: flex-start;
+}
+
+.submit-btn:hover {
+  background: #007c91;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 14px;
+  }
+
+  .submit-btn {
+    font-size: 14px;
+    padding: 0.5rem 1rem;
+  }
+}
+
+  </style>
+              <body>
+                  <h1>Editar produto</h1>
+                  <form action="/editar/${id}" method="POST">
+                      <label for="destino">Destino:</label><br>
+                      <input type="text" name="destino" id="destino" value="${rows[0].destino}"><br><br>
+
+                      <label for="data_viagem">Data Da viagem:</label><br>
+                      <input type="date" name="data_viagem" id="data_viagem" value="${rows[0].data_viagem}"><br><br>
+
+                      <label for="valorunitario">Preço:</label><br>
+                      <input type="number" name="preco" id="preco" value="${rows[0].preco}"><br><br>
+
+                      <label for="vagas">Vagas:</label><br>
+                      <input type="number" name="vagas" id="vagas" value="${rows[0].vagas}"><br><br>
+
+                      
+
+                      <input type="submit" value="Salvar">
+                  </form>
+              </body>
+          </html>`);
+  }else{
+      console.log("Erro ao buscar o produto ", err);
+      res.send("Erro")
+  }
+});
+
+});
+
+
+//rota para editar o produto
+app.post('/editar/:id', function(req, res){
+
+  const id = req.params.id; // pega o id da viagem excluido
+  const destino = req.body.destino; // Obtém o destino do corpo da requisição
+  const data_viagem = req.body.data_viagem; // Obtém a nova data da viagem do corpo da requisição
+  const preco = req.body.preco;  // Obtém o novo valor do corpo da requisição
+  const vagas = req.body.vagas; // Obtém as vagas do valor unitário do corpo da requisição
+
+
+  const update = "UPDATE viagens SET destino = ?, data_viagem = ?, preco = ?, vagas = ? WHERE id = ?";
+
+  connection.query(update, [destino, data_viagem, preco, vagas,id ], function(err, result){
+      if(!err){
+          console.log("Produto editado com sucesso!");
+          res.redirect('/listar'); // Redireciona para a página de listagem após a edição
+      }else{
+          console.log("Erro ao editar o produto ", err);
+          res.send("Erro")
+      }
+    });
+});
+
+// Rota para acessar a página de login
+app.get('/login', function(req, res){
+    res.sendFile(__dirname + "/login.html")
+});
+
+app.post('/login', function(req, res){
+
+  const usuario = req.body.usuario;
+  const senha = req.body.senha;
+  
+
+
+
+});
+
+
 
 // Inicia o servidor
 app.listen(8083, function(){
